@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// models down there
+model Users {
+  id           Int         @id @default(autoincrement())
+  username     String      @unique
+  password     String
+  department   Department? @relation(fields: [departmentId], references: [id])
+  departmentId Int?
+  isAdmin      Boolean     @default(false)
+  createdAt    DateTime    @default(now())
+}
+
+model Department {
+  id           Int        @id @default(autoincrement()) // 001
+  name         String     @unique
+  StaffAdmin   Users[]
+  complaint    Complaint? // One-to-one relationship
+}
+
+model FAQ {
+  id       Int    @id @default(autoincrement())
+  question String
+  answer   String
+}
+
+model Complaint {
+  id             Int             @id @default(autoincrement())
+  customerName   String?
+  customerEmail  String?
+  description    String
+  department     Department     @relation(fields: [departmentId], references: [id]) // One-to-one relationship
+  departmentId   Int             @unique
+  fileAttached   String?
+  date           DateTime        @default(now())
+  status         ComplaintStatus @default(PENDING)
+}
+
+enum ComplaintStatus {
+  PENDING
+  IN_PROGRESS
+  RESOLVED
+}
