@@ -2,6 +2,7 @@
 
 import { useState, FormEvent, useEffect } from 'react';
 import { createUser, getDepartments } from '@/lib/actions/actions';
+import { redirect } from 'next/navigation';
 
 const CreateUser = () => {
   const [username, setUsername] = useState('');
@@ -38,7 +39,6 @@ const CreateUser = () => {
       console.log(error);
     }
   };
-
   return (
     <div>
       <h1>Create User</h1>
@@ -80,7 +80,7 @@ const CreateUser = () => {
             ))}
           </select>
         </div>
-        <button type="submit">Create User</button>
+        <button type="submit" onClick={() => redirect("/admin/users")}>Create User</button>
       </form>
     </div>
   );

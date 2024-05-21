@@ -25,10 +25,10 @@ model Users {
 }
 
 model Department {
-  id           Int        @id @default(autoincrement()) // 001
-  name         String     @unique
-  StaffAdmin   Users[]
-  complaint    Complaint? // One-to-one relationship
+  id         Int         @id @default(autoincrement()) // 001
+  name       String      @unique
+  StaffAdmin Users[]
+  complaint  Complaint[] // One-to-one relationship
 }
 
 model FAQ {
@@ -38,15 +38,15 @@ model FAQ {
 }
 
 model Complaint {
-  id             Int             @id @default(autoincrement())
-  customerName   String?
-  customerEmail  String?
-  description    String
-  department     Department     @relation(fields: [departmentId], references: [id]) // One-to-one relationship
-  departmentId   Int             @unique
-  fileAttached   String?
-  date           DateTime        @default(now())
-  status         ComplaintStatus @default(PENDING)
+  id            Int             @id @default(autoincrement())
+  customerName  String?
+  customerEmail String?
+  description   String
+  department    Department      @relation(fields: [departmentId], references: [id]) // One-to-one relationship
+  departmentId  Int
+  fileAttached  String?
+  date          DateTime        @default(now())
+  status        ComplaintStatus @default(PENDING)
 }
 
 enum ComplaintStatus {

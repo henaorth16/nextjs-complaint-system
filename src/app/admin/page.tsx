@@ -1,7 +1,8 @@
 // pages/complaints/page.tsx
 
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import db from "@/lib/db/db";
-
+import Image from "next/image";
 
 export default async function AdminDashboard() {
   const complaints = await db.complaint.findMany({
@@ -22,33 +23,36 @@ export default async function AdminDashboard() {
       </nav>
       <h1>Complaints</h1>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Customer Name</th>
-            <th>Email</th>
-            <th>Description</th>
-            <th>File Attached</th>
-            <th>Department</th>
-            <th>Date</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Customer Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead>File Attached</TableHead>
+            <TableHead>Department</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="sr-only">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {complaints.map((complaint, index) => (
-            <tr key={index}>
-              <td>{complaint.customerName}</td>
-              <td>{complaint.customerEmail}</td>
-              <td>{complaint.description}</td>
-              <td>{complaint.fileAttached}</td>
-              <td>{complaint.department?.name || "N/A"}</td>
-              <td> {new Date(complaint.date).toLocaleString()}</td>
-              <td>{complaint.status}</td>
-            </tr>
+            <TableRow key={index}>
+              <TableCell>{complaint.customerName}</TableCell>
+              <TableCell>{complaint.customerEmail}</TableCell>
+              <TableCell>{complaint.description}</TableCell>
+              <TableCell>
+                {complaint.fileAttached}
+              </TableCell>
+              <TableCell>{complaint.department?.name || "N/A"}</TableCell>
+              <TableCell> {new Date(complaint.date).toLocaleString()}</TableCell>
+              <TableCell>{complaint.status}</TableCell>
+            </TableRow>
           ))}
 
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
 
     </div>
   );

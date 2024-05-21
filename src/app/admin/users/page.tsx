@@ -1,5 +1,6 @@
 // pages/complaints/page.tsx
 
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import db from "@/lib/db/db";
 
 
@@ -22,25 +23,25 @@ export default async function AdminDashboard() {
       </nav>
       <h1>Complaints</h1>
 
-      <table>
-        <thead>
-          <tr>
-            <th>User Name</th>
-            <th>Password</th>
-            <th>Department</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>User Name</TableHead>
+            <TableHead>Password</TableHead>
+            <TableHead>Department</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {users.map((complaint, index) => (
-            <tr key={index}>
-              <td>{complaint.username}</td>
-              <td>{`${complaint.password.substring(0, 20)}...`}</td>
-              <td>{complaint.department?.name || "N/A"}</td>
-            </tr>
+            <TableRow key={index}>
+              <TableCell>{complaint.username}</TableCell>
+              <TableCell>{`${complaint.password.substring(0, 20)}...`}</TableCell>
+              <TableCell>{complaint.department?.name || "N/A"}</TableCell>
+            </TableRow>
           ))}
 
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
 
     </div>
   );

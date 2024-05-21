@@ -2,6 +2,7 @@
 
 import db from "@/lib/db/db";
 import { hashPassword } from "../isValidPassword";
+import { revalidatePath } from "next/cache";
 
 
 export async function createUser(data: FormData) {
@@ -35,8 +36,9 @@ export async function createUser(data: FormData) {
     });
 
     console.log(data);
-
     return user;
+    revalidatePath("/admin/create")
+    revalidatePath("/admin/users")
   } catch (error) {
     console.error('Error creating user:', error);
     throw error;
