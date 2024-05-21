@@ -17,8 +17,11 @@ const fileSchema = z
     }, { message: "File size should be between 10KB and 5MB" })
     .refine(file => {
         if (!file) return true; 
-        const extension = file.name?.split('.').pop().toLowerCase();
-        return extension !== 'pdf';
+        if (file.name) { // Ensure file.name is defined
+            const extension = file.name.split('.').pop()?.toLowerCase();
+            return extension !== 'pdf';
+        }
+        return true;
     }, { message: "PDF files are not allowed" });
 
 const addSchema = z.object({

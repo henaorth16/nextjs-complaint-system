@@ -65,7 +65,7 @@ export default function UserForm() {
           />
           </div>
           <div>
-          <Label htmlFor='desc'>Discription</Label>
+          <Label htmlFor='desc'>Description</Label>
           <Textarea
           id='desc'
           name="description"
