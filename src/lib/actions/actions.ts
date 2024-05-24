@@ -89,9 +89,6 @@ console.log(id);
 
   // Parse the id to an integer
   const userId = parseInt(id as string, 10);
-
- 
-
   const user = await db.users.findUnique({ where: { id: userId } });
 
   try {
