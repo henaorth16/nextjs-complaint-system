@@ -1,15 +1,19 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient } from '@prisma/client';
 
-const prismaClientSingleton = () => {
-  return new PrismaClient()
-}
-
+// Extend the NodeJS global object to include a prisma property
 declare global {
-  var prisma: undefined | ReturnType<typeof prismaClientSingleton>
+  var prisma: PrismaClient | undefined;
 }
 
-const db = globalThis.prisma ?? prismaClientSingleton()
+let db: PrismaClient;
 
-export default db
+if (process.env.NODE_ENV === 'production') {
+  db = new PrismaClient();
+} else {
+  if (!global.prisma) {
+    global.prisma = new PrismaClient();
+  }
+  db = global.prisma;
+}
 
-if (process.env.NODE_ENV !== "production") globalThis.prisma = db
+export default db;
