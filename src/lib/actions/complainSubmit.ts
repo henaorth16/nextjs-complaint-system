@@ -68,8 +68,8 @@ export async function complainSubmit(formData: FormData) {
 
         console.log("Data successfully stored in the database");
 
-        revalidatePath("/");
     } catch (error) {
         console.error("Error during database operation:", error);
     }
+    
 }

@@ -3,13 +3,17 @@
 import db from "@/lib/db/db";
 import { hashPassword } from "../isValidPassword";
 import { revalidatePath } from "next/cache";
+import { notFound, redirect } from "next/navigation";
 
+interface userProp {
+  username: string
+  password: string
+  dep: string
+}
+export async function createUser(FormData: FormData) {
 
-export async function createUser(data: FormData) {
-  const username = data.get('username') as string;
-  const password = data.get('password') as string;
-  const departmentName = data.get('dep') as string;
-
+  const formEntries = Object.fromEntries(FormData.entries());
+  const {id, username, password, dep}: any = formEntries;
   if (!username) {
     throw new Error('Username is required');
   }
@@ -20,28 +24,24 @@ export async function createUser(data: FormData) {
 
   try {
     const hashedPassword = await hashPassword(password);
-
     // Fetch department by name to get its ID
     const department = await db.department.findFirst({
-      where: { name: departmentName },
+      where: { name: dep },
     });
-
 
     const user = await db.users.create({
       data: {
         username,
         password: hashedPassword,
-        departmentId: department?.id, // Store departmentId
+        departmentId: department?.id, // Store departmentId if its selected
       },
     });
 
-    console.log(data);
     return user;
-    revalidatePath("/admin/create")
-    revalidatePath("/admin/users")
+    revalidatePath("/admin/users/")
+    redirect("/admin/users/")
   } catch (error) {
     console.error('Error creating user:', error);
-    throw error;
   }
 }
 
@@ -52,64 +52,77 @@ export const getDepartments = async () => {
   } catch (error) {
     console.error('Error fetching departments:', error);
   }
-};
-
-
-export async function authenticateUser(data: FormData) {
-
-  const username = data.get('username') as string;
-  const password = data.get('password') as string;
-
-  if (!username || !password) {
-    throw new Error('username and password are required');
-  }
-
-  try {
-    const user = await db.users.findUnique({
-      where: { username },
-    });
-
-    if (!user) {
-      throw new Error('Invalid username or password');
-    }
-
-    const hashedPassword = await hashPassword(password);
-
-    if (user.password !== hashedPassword) {
-      throw new Error('Invalid username or password');
-    }
-
-    return { id: user.id, username: user.username };
-  } catch (error) {
-    console.error('Authentication error:', error);
-    throw new Error('Unable to authenticate user');
-  }
 }
-
-
-
-export async function authenticateUserMiddleware(username: string, password: string) {
-  if (!username || !password) {
-    throw new Error('Username and password are required');
+  export const deleteUsers = async(id: number) => {
+    try {
+        const user = await db.users.delete({ where: { id } })
+  
+        if (user == null) return notFound()
+    } catch (error) {
+      console.log(error);
+      
+    }
+  
+    revalidatePath("/admin/users")
   }
+
+  export const deleteCompliant = async(id: number) => {
+    try {
+        const user = await db.complaint.delete({ where: { id } })
+  
+        if (user == null) return notFound()
+    } catch (error) {
+      console.log(error);
+      
+    }
+  
+    revalidatePath("/admin/compliants")
+  }
+/////////////////////////////////////////////////
+export async function updateUser(id: any,
+  prevState: unknown,
+  formData: FormData) {
+  // Convert FormData to an object
+  const formEntries = Object.fromEntries(formData.entries());
+  const { username, password, dep, isAdmin } = formEntries;
+console.log(id);
+
+  // Parse the id to an integer
+  const userId = parseInt(id as string, 10);
+
+ 
+
+  const user = await db.users.findUnique({ where: { id: userId } });
 
   try {
-    const user = await db.users.findUnique({
-      where: { username },
+    if (user == null) {
+      return notFound();
+    }
+
+    const hashedPassword = await hashPassword(password as string);
+
+    // Fetch department by name to get its ID
+    const department = await db.department.findFirst({
+      where: { name: dep as string },
+    });
+    const adminVal = Boolean(isAdmin);
+
+    await db.users.update({
+      where: { id: userId },
+      data: {
+        username: username as string,
+        password: hashedPassword,
+        departmentId: department?.id || null, // Use null if no department is found
+        isAdmin: adminVal, // Ensure isAdmin is a boolean
+      },
     });
 
-    if (!user) {
-      throw new Error('Invalid username or password');
-    }
-
-    const hashedPassword = await hashPassword(password);
-
-    if (user.password !== hashedPassword) {
-      throw new Error('Invalid username or password');
-    }
-
-    return { id: user.id, username: user.username };
+    // Revalidate paths
+    
   } catch (error) {
-    console.error('Authentication error:', error);
+    console.log(error);
   }
+    revalidatePath('/admin/users');
+    // Redirect to the users page
+    redirect('/admin/users');
 }

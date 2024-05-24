@@ -1,7 +1,6 @@
 'use server';
 
 import { type NextRequest, NextResponse } from "next/server";
-import { authenticateUserMiddleware } from "@/lib/actions/actions"; // Adjust the path to your actual file location
 
 export async function middleware(req: NextRequest) {
   if (!(await isAuthenticated(req))) {
@@ -20,14 +19,6 @@ export async function isAuthenticated(req: NextRequest) {
     .toString()
     .split(":");
 
-  try {
-    const user = await authenticateUserMiddleware(username, password);
-    console.log(user);
-
-    return !!user;
-  } catch {
-    return false;
-  }
 }
 
 export const config = {

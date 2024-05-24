@@ -11,7 +11,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div>
+    <div className="w-90% mx-auto">
      {children}
     </div>
   );

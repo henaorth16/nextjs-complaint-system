@@ -4,7 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import ModeToggle from "@/components/ui/ModeToggle";
-
+import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
   title: "complain reciever",
@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased px-10 w-full",
+          "min-h-screen bg-background font-sans antialiased",
           fontSans.variable
         )}
       >
@@ -35,9 +35,10 @@ export default function RootLayout({
         enableSystem
         disableTransitionOnChange
       >
-        <ModeToggle />
+        <ModeToggle/>
         {children}
       </ThemeProvider>
+      <Toaster/>
       </body>
     </html>
   );
