@@ -28,7 +28,7 @@ model Department {
   id         Int         @id @default(autoincrement()) // 001
   name       String      @unique
   StaffAdmin Users[]
-  complaint  Complaint[] // One-to-one relationship
+  complaint  Complaint[] 
 }
 
 model FAQ {

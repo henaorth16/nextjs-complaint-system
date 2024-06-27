@@ -11,7 +11,7 @@ import { DeleteDropdownItem } from "../_component/userAction";
 export default async function AdminDashboard() {
   const users = await db.users.findMany({
     include: {
-      department: true, // Include related department information
+      department: true,
     },
   });
 
@@ -21,6 +21,7 @@ export default async function AdminDashboard() {
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>N<u>o</u></TableHead>
             <TableHead>User Name</TableHead>
             <TableHead>Password</TableHead>
             <TableHead>Department</TableHead>
@@ -30,6 +31,7 @@ export default async function AdminDashboard() {
         <TableBody>
           {users.map((complaint, index) => (
             <TableRow key={index}>
+              <TableCell>{index + 1}</TableCell>
               <TableCell>{complaint.username}</TableCell>
               <TableCell>{`${complaint.password.substring(0, 20)}...`}</TableCell>
               <TableCell>{complaint.department?.name || "N/A"}</TableCell>

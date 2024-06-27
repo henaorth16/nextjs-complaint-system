@@ -1,6 +1,7 @@
 "use client"
+import { Button } from "@/components/ui/button"
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
-import { deleteUsers, deleteCompliant } from "@/lib/actions/actions"
+import { deleteUsers, deleteCompliant, deletefaq } from "@/lib/actions/actions"
 import { useRouter } from "next/navigation"
 import { useTransition } from "react"
 
@@ -48,5 +49,30 @@ export function DeleteComplient({
     >
       Delete
     </DropdownMenuItem>
+  )
+}
+
+
+
+export function DeleteFaq({
+  id,
+}: {
+  id: number
+}) {
+  const [isPending, startTransition] = useTransition()
+  const router = useRouter()
+  return (
+    <Button
+      variant="destructive"
+      disabled={isPending}
+      onClick={() => {
+        startTransition(async () => {
+          await deletefaq(id)
+          router.refresh()
+        })
+      }}
+    >
+      Delete
+    </Button>
   )
 }

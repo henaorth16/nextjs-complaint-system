@@ -4,6 +4,7 @@ import db from "@/lib/db/db";
 import { hashPassword } from "../isValidPassword";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
+import { z } from "zod";
 
 interface userProp {
   username: string
@@ -13,7 +14,7 @@ interface userProp {
 export async function createUser(FormData: FormData) {
 
   const formEntries = Object.fromEntries(FormData.entries());
-  const {id, username, password, dep}: any = formEntries;
+  const { id, username, password, dep }: any = formEntries;
   if (!username) {
     throw new Error('Username is required');
   }
@@ -53,31 +54,54 @@ export const getDepartments = async () => {
     console.error('Error fetching departments:', error);
   }
 }
-  export const deleteUsers = async(id: number) => {
-    try {
-        const user = await db.users.delete({ where: { id } })
-  
-        if (user == null) return notFound()
-    } catch (error) {
-      console.log(error);
-      
-    }
-  
-    revalidatePath("/admin/users")
+export const deleteUsers = async (id: number) => {
+  try {
+    const user = await db.users.delete({ where: { id } })
+
+    if (user == null) return notFound()
+  } catch (error) {
+    console.log(error);
+
   }
 
-  export const deleteCompliant = async(id: number) => {
-    try {
-        const user = await db.complaint.delete({ where: { id } })
-  
-        if (user == null) return notFound()
-    } catch (error) {
-      console.log(error);
-      
-    }
-  
-    revalidatePath("/admin/compliants")
+  revalidatePath("/admin/users")
+}
+
+export const deleteCompliant = async (id: number) => {
+  try {
+    const user = await db.complaint.delete({ where: { id } })
+
+    if (user == null) return notFound()
+  } catch (error) {
+    console.log(error);
+
   }
+
+  revalidatePath("/admin/compliants")
+}
+
+export async function deletefaq(id: number) {
+  try {
+    const user = await db.fAQ.delete({ where: { id } })
+
+    if (user == null) return notFound()
+  } catch (error) {
+    console.log(error);
+
+  }
+  revalidatePath("/admin/compliants")
+}
+export async function deleteDep(id: number) {
+  try {
+    const user = await db.department.delete({ where: { id } })
+
+    if (user == null) return notFound()
+  } catch (error) {
+    console.log(error);
+
+  }
+  revalidatePath("/admin/compliants")
+}
 /////////////////////////////////////////////////
 export async function updateUser(id: any,
   prevState: unknown,
@@ -85,7 +109,7 @@ export async function updateUser(id: any,
   // Convert FormData to an object
   const formEntries = Object.fromEntries(formData.entries());
   const { username, password, dep, isAdmin } = formEntries;
-console.log(id);
+  console.log(id);
 
   // Parse the id to an integer
   const userId = parseInt(id as string, 10);
@@ -115,11 +139,55 @@ console.log(id);
     });
 
     // Revalidate paths
-    
+
   } catch (error) {
     console.log(error);
   }
-    revalidatePath('/admin/users');
-    // Redirect to the users page
-    redirect('/admin/users');
+  revalidatePath('/admin/users');
+  // Redirect to the users page
+  redirect('/admin/users');
+}
+
+
+export async function addFaq(FormData: FormData) {
+  if (!FormData) {
+    throw new Error("data is not");
+
+  }
+  const formEntries = Object.fromEntries(FormData.entries());
+  const { question, answer } = formEntries;
+  try {
+
+    const faq = await db.fAQ.create({
+      data: {
+        question: question as string,
+        answer: answer as string,
+      }
+    });
+    revalidatePath('/admin/faq');
+    return faq
+  } catch (error) {
+    return console.log(error);
+  }
+}
+
+export async function addDep(FormData: FormData) {
+  if (!FormData) {
+    throw new Error("data is not");
+
+  }
+  const formEntries = Object.fromEntries(FormData.entries());
+  const { name } = formEntries;
+  try {
+
+    const faq = await db.department.create({
+      data: {
+        name: name as string,
+      }
+    });
+    revalidatePath('/admin/department');
+    return faq
+  } catch (error) {
+    return console.log(error);
+  }
 }

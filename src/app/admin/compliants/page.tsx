@@ -6,12 +6,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import Link from "next/link";
 import { MoreVertical } from "lucide-react";
 import { DeleteComplient } from "../_component/userAction";
-// import { useState } from "react";
-
 
 export default async function ComplainView() {
-
-  // const [open, setOpen] = useState(false);
 
   const complaints = await db.complaint.findMany({
     include: {
