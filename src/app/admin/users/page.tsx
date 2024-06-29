@@ -6,6 +6,7 @@ import db from "@/lib/db/db";
 import { MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { DeleteDropdownItem } from "../_component/userAction";
+import { Button } from "@/components/ui/button";
 
 
 export default async function AdminDashboard() {
@@ -18,6 +19,11 @@ export default async function AdminDashboard() {
   return (
     <div>
       <h1>Users</h1>
+      <div className="w-full flex justify-end p-4">
+        <a href="/admin/users/create">
+          <Button>Create New</Button>
+        </a>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>

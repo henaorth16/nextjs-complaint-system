@@ -3,12 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { addFaq } from "@/lib/actions/actions";
-import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 
-const initialState = {
-    message: "",
-};
 
 export function AddFaq() {
     const { pending } = useFormStatus();

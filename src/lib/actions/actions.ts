@@ -24,6 +24,7 @@ export async function createUser(FormData: FormData) {
 
 
   try {
+    revalidatePath("/admin/users")
     const hashedPassword = await hashPassword(password);
     // Fetch department by name to get its ID
     const department = await db.department.findFirst({
@@ -37,13 +38,11 @@ export async function createUser(FormData: FormData) {
         departmentId: department?.id, // Store departmentId if its selected
       },
     });
-
     return user;
-    revalidatePath("/admin/users/")
-    redirect("/admin/users/")
   } catch (error) {
     console.error('Error creating user:', error);
   }
+  revalidatePath("/admin/users")
 }
 
 export const getDepartments = async () => {
