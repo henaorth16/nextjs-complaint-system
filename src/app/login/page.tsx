@@ -2,6 +2,10 @@
 
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation'; 
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -16,12 +20,12 @@ const LoginPage = () => {
 
   return (
     <div className='flex justify-center items-center h-screen'>
-      <div className=' p-8 rounded-lg shadow-md w-full max-w-sm'>
+      <Card className=' p-8 w-full max-w-sm'>
         <h1 className='text-2xl mb-6 text-center'>MLITC Login</h1>
         <form onSubmit={handleSubmit} className='space-y-4'>
           <div className='flex flex-col'>
             <label htmlFor='username' className='mb-2'>Username:</label>
-            <input
+            <Input
               type='text'
               name='username'
               id='username'
@@ -32,8 +36,8 @@ const LoginPage = () => {
             />
           </div>
           <div className='flex flex-col'>
-            <label htmlFor='password' className='mb-2'>Password:</label>
-            <input
+            <Label htmlFor='password' className='mb-2'>Password:</Label>
+            <Input
               type='password'
               name='password'
               id='password'
@@ -43,12 +47,12 @@ const LoginPage = () => {
               className='p-2 border rounded-lg'
             />
           </div>
-          <button type='submit' className='w-full p-2 bg-primary text-black  rounded-lg hover:bg-white'>
+          <Button type='submit' className='w-full p-2 bg-primary text-black  rounded-lg hover:bg-white'>
             Login
-          </button>
+          </Button>
         </form>
         {message && <p className='text-red-500 mt-4 text-center'>{message}</p>}
-      </div>
+      </Card>
     </div>
   );
 };

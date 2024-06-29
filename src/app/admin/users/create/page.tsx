@@ -64,9 +64,14 @@ const CreateUser = () => {
             </Select>
           </SelectGroup>
         </div>
-        <Button type="submit" onClick={() => {
-           window.location.href="/admin/users"
-           }}>Create User</Button>
+
+        <div className='w-full flex justify-end p-3'>
+          <Button type="submit" onClick={() => {
+            window.location.href = "/admin/users"
+          }}>
+            Create User
+          </Button>
+        </div>
       </form>
     </div>
   );
