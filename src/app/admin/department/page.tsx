@@ -14,7 +14,7 @@ export default async function DepartmentAdmin() {
         {deps.map((dep, ind) => (
           <li className="w-full flex justify-between p-2 hover:bg-muted" key={dep.id}>
             <span>{ind + 1},&nbsp; {dep.name}</span>
-            <DeleteDep id={dep.id} className="" />
+            <DeleteDep id={dep.id} />
           </li>
         ))}
       </ul>
