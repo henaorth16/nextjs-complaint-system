@@ -8,7 +8,7 @@ export default async function adminFaq() {
     const faqs = await db.fAQ.findMany({});
     return (
         <main>
-            <h1 className="">FAQ</h1>
+            <h1>FAQ</h1>
             <AddFaq />
             <Table>
                 <TableHeader>
@@ -20,9 +20,9 @@ export default async function adminFaq() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {faqs.map((faq,index) => (
+                    {faqs.map((faq, index) => (
                         <TableRow key={faq.id} className="">
-                            <TableCell>{index+1}</TableCell>
+                            <TableCell>{index + 1}</TableCell>
                             <TableCell className="text-lg">
                                 {faq.question.substring(0, 24)}{faq.question.length > 25 ? "..." : ""}
                             </TableCell>
