@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { createUser, getDepartments } from '@/lib/actions/actions';
-import { redirect } from 'next/navigation';
 import { Label } from '@/components/ui/label';
 import { Select, SelectValue, SelectTrigger, SelectContent, SelectItem, SelectLabel, SelectGroup } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 const CreateUser = () => {
   const [departments, setDepartments] = useState<{ id: number; name: string }[]>([]);
@@ -24,7 +24,6 @@ const CreateUser = () => {
 
     fetchDepartments();
   }, []);
-
 
   return (
     <div>
@@ -65,7 +64,9 @@ const CreateUser = () => {
             </Select>
           </SelectGroup>
         </div>
-        <button type="submit" onClick={() => redirect("/admin/users")}>Create User</button>
+        <Button type="submit" onClick={() => {
+           window.location.href="/admin/users"
+           }}>Create User</Button>
       </form>
     </div>
   );

@@ -24,10 +24,10 @@ export default async function adminFaq() {
                         <TableRow key={faq.id} className="">
                             <TableCell>{index+1}</TableCell>
                             <TableCell className="text-lg">
-                                {faq.question.substring(0, 19)}{faq.question.length > 20 ? "..." : ""}
+                                {faq.question.substring(0, 24)}{faq.question.length > 25 ? "..." : ""}
                             </TableCell>
                             <TableCell>
-                                {faq.answer.substring(0, 19)}{faq.answer.length > 20 ? "..." : ""}
+                                {faq.answer.substring(0, 25)}{faq.answer.length > 26 ? "..." : ""}
                             </TableCell>
                             <TableCell>
                                 <DeleteFaq id={faq.id} />
