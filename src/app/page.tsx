@@ -12,12 +12,9 @@ import { useRouter } from 'next/navigation';
 import { useToast } from "@/components/ui/use-toast"
 import { HomeHeader } from '@/components/ui/text-generate-effect';
 
-
-
-
 export default function UserForm() {
-  const router = useRouter()
-  const { toast } = useToast()
+  const router = useRouter();
+  const { toast } = useToast();
 
   const [departments, setDepartments] = useState<{ id: number; name: string }[]>([]);
 
@@ -36,16 +33,13 @@ export default function UserForm() {
     fetchDepartments();
   }, []);
 
-
-
   return (
-    <div className='w-[94%] md:w-[60%] min-h-screen mx-auto mt-6 mb-14 flex  items-center justify-center flex-col'>
+    <div className='w-[94%] md:w-[60%] min-h-screen mx-auto mt-6 mb-14 flex items-center justify-center flex-col'>
       <HomeHeader/>
       <form action={complainSubmit} className='w-full flex flex-col gap-[0.83rem]'>
         <div className='flex flex-col md:flex-row w-full gap-4'>
           <div className='grow'>
-
-            <Label htmlFor="name" >Name</Label>
+            <Label htmlFor="name">Name</Label>
             <Input
               id='name'
               type="text"
@@ -55,8 +49,7 @@ export default function UserForm() {
             />
           </div>
           <div className='grow'>
-
-            <Label htmlFor="email" >E-mail</Label>
+            <Label htmlFor="email">E-mail</Label>
             <Input
               id='email'
               type="email"
@@ -77,9 +70,7 @@ export default function UserForm() {
         </div>
         <div>
           <SelectGroup>
-
             <SelectLabel>Select Department</SelectLabel>
-
             <Select
               name="department"
               required
@@ -95,26 +86,27 @@ export default function UserForm() {
             </Select>
           </SelectGroup>
         </div>
-        <div>
-        </div>
-        <Label htmlFor='file'>Chooose file</Label>
+        <div></div>
+        <Label htmlFor='file'>Choose file</Label>
         <Input
           id='file'
           type="file"
           name="fileAttached"
           placeholder="File Attached"
         />
-
-        <Button type="submit" onClick={() => {
-          toast({
-            title: "Your message has been sent.",
-            description: "Thank you!",
-          })
-        }} className='w-full' >Create Complaint</Button>
+        <Button
+          type="submit"
+          onClick={() => {
+            toast({
+              title: "Your message has been sent.",
+              description: "Thank you!",
+            });
+          }}
+          className='w-full'
+        >
+          Create Complaint
+        </Button>
       </form>
     </div>
-
   );
 }
-
-
