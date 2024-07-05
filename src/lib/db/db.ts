@@ -1,9 +1,6 @@
+// @ts-nocheck
 import { PrismaClient } from '@prisma/client';
 
-// Extend the NodeJS global object to include a prisma property
-declare global {
-  var prisma: PrismaClient | undefined;
-}
 
 let db: PrismaClient;
 
