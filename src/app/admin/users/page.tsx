@@ -24,7 +24,11 @@ export default async function AdminDashboard() {
           <Button>Create New</Button>
         </a>
       </div>
-      <Table>
+      {users.length == 0 ? (
+        <h2 className="text-center">No Users Yet!</h2>
+
+      ):(
+        <Table>
         <TableHeader>
           <TableRow>
             <TableHead>N<u>o</u></TableHead>
@@ -65,6 +69,7 @@ export default async function AdminDashboard() {
 
         </TableBody>
       </Table>
+      )}
 
     </div>
   );

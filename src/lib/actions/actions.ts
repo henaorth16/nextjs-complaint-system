@@ -42,6 +42,7 @@ export async function createUser(FormData: FormData) {
   } catch (error) {
     console.error('Error creating user:', error);
   }
+  redirect('/admin/users')
   revalidatePath("/admin/users")
 }
 
@@ -137,13 +138,10 @@ export async function updateUser(id: any,
       },
     });
 
-    // Revalidate paths
-
   } catch (error) {
     console.log(error);
   }
   revalidatePath('/admin/users');
-  // Redirect to the users page
   redirect('/admin/users');
 }
 

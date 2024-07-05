@@ -21,7 +21,7 @@ export default async function adminFaq() {
                 </TableHeader>
                 <TableBody>
                     {faqs.map((faq, index) => (
-                        <TableRow key={faq.id} className="">
+                        <TableRow key={faq.id}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell className="text-lg">
                                 {faq.question.substring(0, 24)}{faq.question.length > 25 ? "..." : ""}

@@ -44,8 +44,8 @@ const AdminDashboard = async () => {
   return (
     <div className='grid grid-cols-4 gap-4 md:px-32 py-10'>
       {lists.map((list, index) => (
-        <a className='group' href={list.path}>
-          <Card key={index}>
+        <a className='group' href={list.path} key={index}>
+          <Card>
             <CardTitle>
               <CardHeader className='text-2xl mx-auto w-fit text-card-foreground opacity-70'>
                 <list.icon className='text-4xl' size={50} strokeWidth={1.5} />
