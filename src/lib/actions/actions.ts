@@ -82,20 +82,20 @@ export const deleteCompliant = async (id: number) => {
 
 export async function deletefaq(id: number) {
   try {
-    const user = await db.fAQ.delete({ where: { id } })
+    const faq = await db.fAQ.delete({ where: { id } })
 
-    if (user == null) return notFound()
+    if (faq == null) return notFound()
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
   }
   revalidatePath("/admin/compliants")
 }
 export async function deleteDep(id: number) {
   try {
-    const user = await db.department.delete({ where: { id } })
+    const dep = await db.department.delete({ where: { id } })
 
-    if (user == null) return notFound()
+    if (dep == null) return notFound()
   } catch (error) {
     console.log(error);
 
