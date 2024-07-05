@@ -9,8 +9,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // uses connection pooling
+  directUrl = env("DATABASE_URL") // uses a direct connection
 }
 
 // models down there
@@ -28,7 +29,7 @@ model Department {
   id         Int         @id @default(autoincrement()) // 001
   name       String      @unique
   StaffAdmin Users[]
-  complaint  Complaint[] 
+  complaint  Complaint[]
 }
 
 model FAQ {
