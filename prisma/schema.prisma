@@ -9,11 +9,10 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL") // uses connection pooling
-  directUrl = env("DATABASE_URL") // uses a direct connection
+  provider = "postgresql"
+  url = env("DATABASE_URL_PRISMA_URL") // uses connection pooling
+  directUrl = env("DATABASE_URL_URL_NON_POOLING") // uses a direct connection
 }
-
 // models down there
 model Users {
   id           Int         @id @default(autoincrement())
