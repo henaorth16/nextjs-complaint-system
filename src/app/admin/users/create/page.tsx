@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useTransition, FormEvent } from 'react';
 import { createUser, getDepartments } from '@/lib/actions/actions';
 import { Label } from '@/components/ui/label';
 import { Select, SelectValue, SelectTrigger, SelectContent, SelectItem, SelectLabel, SelectGroup } from '@/components/ui/select';
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 
 const CreateUser = () => {
   const [departments, setDepartments] = useState<{ id: number; name: string }[]>([]);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -25,10 +26,23 @@ const CreateUser = () => {
     fetchDepartments();
   }, []);
 
+  const handleSubmit = (event:FormEvent<HTMLFormElement> | any) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+
+    startTransition(async () => {
+      try {
+        await createUser(formData);
+      } catch (error) {
+        console.error('Error creating user:', error);
+      }
+    });
+  };
+
   return (
     <div>
       <h1>Create User</h1>
-      <form action={createUser}>
+      <form onSubmit={handleSubmit}>
         <div>
           <Label htmlFor='username'>Username:</Label>
           <Input
@@ -64,6 +78,7 @@ const CreateUser = () => {
             </Select>
           </SelectGroup>
         </div>
+<<<<<<< HEAD
 
         <div className='w-full flex justify-end p-3'>
           <Button type="submit" onClick={() => {
@@ -72,6 +87,11 @@ const CreateUser = () => {
             Create User
           </Button>
         </div>
+=======
+        <Button type="submit" disabled={isPending}>
+          {isPending ? 'Creating...' : 'Create User'}
+        </Button>
+>>>>>>> 7a127b68b10ec66cd66733b3fec91734fb1b9cc5
       </form>
     </div>
   );

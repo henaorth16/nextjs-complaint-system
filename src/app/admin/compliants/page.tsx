@@ -18,7 +18,12 @@ export default async function ComplainView() {
   return (
     <div>
       <h1>Complaints</h1>
-      <Table>
+      {
+        complaints.length == 0 ?(
+          <h2 className="text-center">No Complaints Yet!</h2>
+
+        ):(
+          <Table>
         <TableHeader>
           <TableRow className="text-primary-foregroung">
             <TableHead>order</TableHead>
@@ -73,6 +78,8 @@ export default async function ComplainView() {
 
         </TableBody>
       </Table>
+        )
+      }
 
     </div>
   );
