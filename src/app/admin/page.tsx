@@ -3,7 +3,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import db from '@/lib/db/db';
 import { Blocks, BookOpenText, MessageCircleQuestion, UserCircle } from 'lucide-react';
 
+
+
+async function getUserData() {
+  const data = await db.users.aggregate({
+    _count: true,
+  })
+
+  return {
+    numberOfUsers: data._count,
+  }
+}
+
 const AdminDashboard = async () => {
+  const userData = await getUserData()
   const complaints = await db.complaint.findMany({
     include: {
       department: true,
@@ -13,12 +26,13 @@ const AdminDashboard = async () => {
   const faq = await db.fAQ.findMany({});
   const department = await db.department.findMany({});
 
+  
 
   const lists = [
     {
       icon: UserCircle,
       title: "Users",
-      numData: users.length,
+      numData: userData.numberOfUsers,
       path:"admin/users",
     },
     {
