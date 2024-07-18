@@ -12,6 +12,12 @@ interface UserPayload {
   departmentId?: number;
 }
 
+function isUserPayload(payload: any): payload is UserPayload {
+  return typeof payload.id === 'number' && 
+         typeof payload.isAdmin === 'boolean' && 
+         (typeof payload.departmentId === 'number' || payload.departmentId === undefined);
+}
+
 export default async function ComplainView() {
   // Get JWT from cookies and decode it to get user information
   const cookieStore = cookies();
@@ -27,13 +33,24 @@ export default async function ComplainView() {
   }
 
   const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-  let user;
+  let user: UserPayload | null = null;
 
   try {
     const { payload } = await jose.jwtVerify(token, secret, {
       algorithms: ['HS512'],
     });
-    user = payload as UserPayload;
+
+    if (isUserPayload(payload)) {
+      user = payload;
+    } else {
+      console.error('Invalid JWT payload structure');
+      return (
+        <div>
+          <h1>Unauthorized</h1>
+          <p>Please log in to view this page.</p>
+        </div>
+      );
+    }
   } catch (error) {
     console.error('JWT verification failed:', error);
     return (
