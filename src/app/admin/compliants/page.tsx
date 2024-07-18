@@ -40,8 +40,10 @@ export default async function ComplainView() {
       algorithms: ['HS512'],
     });
 
-    if (isUserPayload(payload)) {
-      user = payload;
+    const payloadAsUnknown = payload as unknown;
+
+    if (isUserPayload(payloadAsUnknown)) {
+      user = payloadAsUnknown;
     } else {
       console.error('Invalid JWT payload structure');
       return (
