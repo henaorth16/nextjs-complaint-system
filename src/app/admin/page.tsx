@@ -2,9 +2,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import db from '@/lib/db/db';
 import { Blocks, BookOpenText, MessageCircleQuestion, UserCircle } from 'lucide-react';
-
-
-
+import { cookies } from "next/headers";
+import * as jose from 'jose';
 async function getUserData() {
   const data = await db.users.aggregate({
     _count: true,
@@ -16,6 +15,43 @@ async function getUserData() {
 }
 
 const AdminDashboard = async () => {
+
+
+
+  const cookieStore = cookies();
+  const token = cookieStore.get('Authorization')?.value;
+
+  if (!token) {
+    return (
+      <div>
+        <h1>Unauthorized</h1>
+        <p>Please log in to view this page.</p>
+      </div>
+    );
+  }
+
+  const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+  let user;
+
+  try {
+    const { payload } = await jose.jwtVerify(token, secret, {
+      algorithms: ['HS512'],
+    });
+    user = payload;
+  } catch (error) {
+    console.error('JWT verification failed:', error);
+    return (
+      <div>
+        <h1>Unauthorized</h1>
+        <p>Please log in to view this page.</p>
+      </div>
+    );
+  }
+if(user){
+  console.log(user);
+  
+}
+
   const userData = await getUserData()
   const complaints = await db.complaint.findMany({
     include: {
@@ -25,8 +61,6 @@ const AdminDashboard = async () => {
   const users = await db.users.findMany({});
   const faq = await db.fAQ.findMany({});
   const department = await db.department.findMany({});
-
-  
 
   const lists = [
     {

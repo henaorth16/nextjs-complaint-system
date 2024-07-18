@@ -1,26 +1,33 @@
-'use server';
+import { NextRequest, NextResponse } from 'next/server';
+import * as jose from 'jose';
 
-import { type NextRequest, NextResponse } from "next/server";
+export async function middleware(request: NextRequest) {
+  const token = request.cookies.get('Authorization')?.value;
 
-export async function middleware(req: NextRequest) {
-  if (!(await isAuthenticated(req))) {
-    // Redirect to the login page if the user is not authenticated
-    return NextResponse.redirect(new URL('/login', req.url));
+  if (!token) {
+    // If there's no token, redirect to login page
+    return NextResponse.redirect(new URL('/login', request.url));
   }
-  return NextResponse.next(); // Allow the request to continue if authenticated
+
+  try {
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+
+    // Verify the token
+    await jose.jwtVerify(token, secret, {
+      algorithms: ['HS512'],
+    });
+
+    // If token is valid, allow the request to proceed
+    return NextResponse.next();
+  } catch (error) {
+    console.error('JWT verification failed:', error);
+
+    // If token verification fails, redirect to login page
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
 }
 
-export async function isAuthenticated(req: NextRequest) {
-  const authHeader = req.headers.get("authorization") || req.headers.get("Authorization");
-
-  if (!authHeader) return false;
-
-  const [username, password] = Buffer.from(authHeader.split(" ")[1], "base64")
-    .toString()
-    .split(":");
-
-}
-
+// Define the paths where the middleware should run
 export const config = {
-  matcher: "/admins/:path*",
+  matcher: ['/admin/:path*', '/some-other-protected-path/:path*'], // Add more paths as needed
 };

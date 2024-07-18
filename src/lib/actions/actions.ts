@@ -24,7 +24,6 @@ export async function createUser(FormData: FormData) {
 
 
   try {
-    revalidatePath("/admin/users")
     const hashedPassword = await hashPassword(password);
     // Fetch department by name to get its ID
     const department = await db.department.findFirst({

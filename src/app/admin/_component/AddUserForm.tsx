@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createUser, getDepartments, updateUser } from '@/lib/actions/actions';
+import { getDepartments, updateUser } from '@/lib/actions/actions';
 import { redirect } from 'next/navigation';
 import { useFormState } from 'react-dom';
 import { Label } from '@/components/ui/label';
