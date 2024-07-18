@@ -5,18 +5,7 @@ import { MoreVertical } from "lucide-react";
 import { DeleteComplient } from "../_component/userAction";
 import { cookies } from "next/headers";
 import * as jose from 'jose';
-
-interface UserPayload {
-  id: number;
-  isAdmin: boolean;
-  departmentId?: number;
-}
-
-function isUserPayload(payload: any): payload is UserPayload {
-  return typeof payload.id === 'number' && 
-         typeof payload.isAdmin === 'boolean' && 
-         (typeof payload.departmentId === 'number' || payload.departmentId === undefined);
-}
+import { any } from "zod";
 
 export default async function ComplainView() {
   // Get JWT from cookies and decode it to get user information
@@ -27,62 +16,42 @@ export default async function ComplainView() {
     return (
       <div>
         <h1>Unauthorized</h1>
-        <p>Please log in to view this page.</p>
       </div>
     );
   }
 
   const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-  let user: UserPayload | null = null;
-
+  let username = null;
+  let departmentId: any;
   try {
-    const { payload } = await jose.jwtVerify(token, secret, {
-      algorithms: ['HS512'],
-    });
-
-    const payloadAsUnknown = payload as unknown;
-
-    if (isUserPayload(payloadAsUnknown)) {
-      user = payloadAsUnknown;
-    } else {
-      console.error('Invalid JWT payload structure');
-      return (
-        <div>
-          <h1>Unauthorized</h1>
-          <p>Please log in to view this page.</p>
-        </div>
-      );
-    }
+    const { payload } = await jose.jwtVerify(token, secret);
+    username = payload.username;
+    const uniUser = await db.users.findFirst({
+      where:{
+        username: username as string
+      }
+    })
+    console.log(uniUser);
+    departmentId = uniUser?.departmentId
   } catch (error) {
-    console.error('JWT verification failed:', error);
+    console.error('Error decoding token:', error);
     return (
       <div>
-        <h1>Unauthorized</h1>
-        <p>Please log in to view this page.</p>
+        <h1>Invalid token</h1>
       </div>
     );
   }
+  console.log("payload");
 
-  let complaints;
-
-  if (user.isAdmin) {
-    // Fetch all complaints if the user is an admin
-    complaints = await db.complaint.findMany({
-      include: {
-        department: true,
-      },
-    });
-  } else {
-    // Fetch complaints related to the user's department if the user is not an admin
-    complaints = await db.complaint.findMany({
+  // Fetch complaints based on user role
+ const complaints = await db.complaint.findMany({
       where: {
-        departmentId: user.departmentId,
+        departmentId: departmentId, // Assuming username is the customer's email
       },
       include: {
         department: true,
       },
     });
-  }
 
   return (
     <div>
@@ -93,7 +62,7 @@ export default async function ComplainView() {
         <Table>
           <TableHeader>
             <TableRow className="text-primary-foregroung">
-              <TableHead>order</TableHead>
+              <TableHead>Order</TableHead>
               <TableHead>Customer Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Description</TableHead>
@@ -123,7 +92,7 @@ export default async function ComplainView() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       <DropdownMenuItem asChild>
-                        <a download href={`/admin/comliants/${complaint.id}/download`}>
+                        <a download href={`/admin/complaints/${complaint.id}/download`}>
                           Download
                         </a>
                       </DropdownMenuItem>
