@@ -7,12 +7,10 @@ export default async function loginAction(
   currentState: any,
   formData: FormData
 ): Promise<string> {
-  // Get the data off the form
   const username = formData.get("username");
   const password = formData.get("password");
 
-  //  Send to our api route
-  const res = await fetch(process.env.ROOT_URL + "/api/login", {
+  const res = await fetch(`${process.env.ROOT_URL}/api/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -22,17 +20,13 @@ export default async function loginAction(
 
   const json = await res.json();
 
-  cookies().set("Authorization", json.token, {
-    secure: true,
-    httpOnly: true,
-    // 3 days expiration delay
-    expires: Date.now() + 24 * 60 * 60 * 1000 * 3,
-    path: "/",
-    sameSite: "strict",
-  });
-
-  // Redirect to login if success
   if (res.ok) {
+    cookies().set("Authorization", json.token, {
+      httpOnly: true,
+      expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+      path: "/",
+      sameSite: "strict",
+    });
     redirect("/admin");
   } else {
     return json.error;

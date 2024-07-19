@@ -1,7 +1,12 @@
 'use client'
-// Use 'next/navigation' instead of 'next/router'
 import { useFormState } from 'react-dom';
 import loginAction from './lognAction';
+// import { Metadata } from 'next';
+
+// export const metadata: Metadata = {
+//   title: "Log in",
+//   description: "",
+// };
 
 const LoginPage = () => {
   const [error, formAction] = useFormState(loginAction, undefined);

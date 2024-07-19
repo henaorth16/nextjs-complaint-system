@@ -5,7 +5,7 @@ import { MoreVertical } from "lucide-react";
 import { DeleteComplient } from "../_component/userAction";
 import { cookies } from "next/headers";
 import * as jose from 'jose';
-import { any } from "zod";
+import getData from "../getData";
 
 export default async function ComplainView() {
   // Get JWT from cookies and decode it to get user information
@@ -13,45 +13,44 @@ export default async function ComplainView() {
   const token = cookieStore.get('Authorization')?.value;
 
   if (!token) {
-    return (
-      <div>
-        <h1>Unauthorized</h1>
-      </div>
-    );
+    throw new Error("invalid token");
+
   }
 
   const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-  let username = null;
+  let authUser = null;
   let departmentId: any;
   try {
-    const { payload } = await jose.jwtVerify(token, secret);
-    username = payload.username;
-    const uniUser = await db.users.findFirst({
-      where:{
-        username: username as string
-      }
-    })
-    console.log(uniUser);
-    departmentId = uniUser?.departmentId
-  } catch (error) {
-    console.error('Error decoding token:', error);
-    return (
-      <div>
-        <h1>Invalid token</h1>
-      </div>
-    );
-  }
-  console.log("payload");
+    authUser = await getData();
+    departmentId = authUser.departmentId;
+    console.log(authUser);
 
-  // Fetch complaints based on user role
- const complaints = await db.complaint.findMany({
+  } catch (error: any) {
+    console.error(error);
+  }
+
+  console.log("Payload decoded successfully");
+  let complaints;
+  // Fetch complaints based on user's department
+  if (!authUser) {
+    return <h1>you are not authorized please <a className="text-link" href="/login">Login</a></h1>
+  }
+  if (!authUser.isAdmin) {
+    complaints = await db.complaint.findMany({
       where: {
-        departmentId: departmentId, // Assuming username is the customer's email
+        departmentId: departmentId,
       },
       include: {
         department: true,
       },
     });
+  } else {
+    complaints = await db.complaint.findMany({
+      include: {
+        department: true,
+      },
+    });
+  }
 
   return (
     <div>
@@ -61,7 +60,7 @@ export default async function ComplainView() {
       ) : (
         <Table>
           <TableHeader>
-            <TableRow className="text-primary-foregroung">
+            <TableRow className="text-primary-foreground">
               <TableHead>Order</TableHead>
               <TableHead>Customer Name</TableHead>
               <TableHead>Email</TableHead>

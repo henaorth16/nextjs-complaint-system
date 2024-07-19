@@ -4,6 +4,9 @@ import db from '@/lib/db/db';
 import { Blocks, BookOpenText, MessageCircleQuestion, UserCircle } from 'lucide-react';
 import { cookies } from "next/headers";
 import * as jose from 'jose';
+import getData from './getData';
+
+
 async function getUserData() {
   const data = await db.users.aggregate({
     _count: true,
@@ -16,41 +19,14 @@ async function getUserData() {
 
 const AdminDashboard = async () => {
 
-
-
-  const cookieStore = cookies();
-  const token = cookieStore.get('Authorization')?.value;
-
-  if (!token) {
-    return (
-      <div>
-        <h1>Unauthorized</h1>
-        <p>Please log in to view this page.</p>
-      </div>
-    );
-  }
-
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-  let user;
-
+  let authUser = null;
   try {
-    const { payload } = await jose.jwtVerify(token, secret, {
-      algorithms: ['HS512'],
-    });
-    user = payload;
-  } catch (error) {
-    console.error('JWT verification failed:', error);
-    return (
-      <div>
-        <h1>Unauthorized</h1>
-        <p>Please log in to view this page.</p>
-      </div>
-    );
+    authUser = await getData();
+    console.log(authUser);
+
+  } catch (error: any) {
+    console.error(error);
   }
-if(user){
-  console.log(user);
-  
-}
 
   const userData = await getUserData()
   const complaints = await db.complaint.findMany({
@@ -61,33 +37,42 @@ if(user){
   const users = await db.users.findMany({});
   const faq = await db.fAQ.findMany({});
   const department = await db.department.findMany({});
-
-  const lists = [
+  if (!authUser) {
+    return <h1>you are not authorized please <a className="text-link" href="/login">Login</a></h1>
+  }
+  const lists = authUser.isAdmin ? [
     {
       icon: UserCircle,
       title: "Users",
       numData: userData.numberOfUsers,
-      path:"admin/users",
+      path: "admin/users",
     },
     {
       icon: BookOpenText,
       title: "Complaints",
       numData: complaints.length,
-      path:"admin/compliants",
+      path: "admin/compliants",
     },
     {
       icon: MessageCircleQuestion,
       title: "FAQ",
       numData: faq.length,
-      path:"admin/faq",
+      path: "admin/faq",
     },
     {
       icon: Blocks,
       title: "Department",
       numData: department.length,
-      path:"admin/department",
+      path: "admin/department",
     },
-  ];
+  ] : [
+    {
+      icon: BookOpenText,
+      title: "Complaints",
+      numData: complaints.length,
+      path: "admin/compliants",
+    },
+  ]
 
   return (
     <div className='grid md:grid-cols-4 grid-cols-1 gap-4 md:px-32 py-10'>

@@ -29,5 +29,5 @@ export async function middleware(request: NextRequest) {
 
 // Define the paths where the middleware should run
 export const config = {
-  matcher: ['/admin/:path*', '/some-other-protected-path/:path*'], // Add more paths as needed
+  matcher: ['/admin/:path*'], // Add more paths as needed
 };
