@@ -24,3 +24,4 @@ export async function isAuthenticated(req: NextRequest) {
 export const config = {
   matcher: "/admins/:path*",
 };
+  

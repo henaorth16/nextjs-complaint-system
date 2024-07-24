@@ -78,7 +78,6 @@ const CreateUser = () => {
             </Select>
           </SelectGroup>
         </div>
-<<<<<<< HEAD
 
         <div className='w-full flex justify-end p-3'>
           <Button type="submit" onClick={() => {
@@ -87,11 +86,6 @@ const CreateUser = () => {
             Create User
           </Button>
         </div>
-=======
-        <Button type="submit" disabled={isPending}>
-          {isPending ? 'Creating...' : 'Create User'}
-        </Button>
->>>>>>> 7a127b68b10ec66cd66733b3fec91734fb1b9cc5
       </form>
     </div>
   );

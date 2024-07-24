@@ -9,10 +9,10 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url = env("DATABASE_URL") // uses connection pooling
 }
-// models down there
+
 model Users {
   id           Int         @id @default(autoincrement())
   username     String      @unique
