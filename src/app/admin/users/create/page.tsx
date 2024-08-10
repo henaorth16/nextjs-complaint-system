@@ -6,7 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectValue, SelectTrigger, SelectContent, SelectItem, SelectLabel, SelectGroup } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-
+import Title from '../../_component/Title';
+import { Loader, Loader2 } from 'lucide-react';
 const CreateUser = () => {
   const [departments, setDepartments] = useState<{ id: number; name: string }[]>([]);
   const [isPending, startTransition] = useTransition();
@@ -41,7 +42,7 @@ const CreateUser = () => {
 
   return (
     <div>
-      <h1>Create User</h1>
+      < Title title="Create User"/>
       <form onSubmit={handleSubmit}>
         <div>
           <Label htmlFor='username'>Username:</Label>
@@ -79,7 +80,7 @@ const CreateUser = () => {
           </SelectGroup>
         </div>
         <Button type="submit" disabled={isPending}>
-          {isPending ? 'Creating...' : 'Create User'}
+          {isPending ? <Loader/> : 'Create User'}
         </Button>
       </form>
     </div>

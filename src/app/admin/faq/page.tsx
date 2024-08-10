@@ -2,13 +2,14 @@ import db from "@/lib/db/db";
 import { DeleteFaq } from "../_component/userAction";
 import { AddFaq } from "./add";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import Title from "../_component/Title";
 
 
 export default async function adminFaq() {
     const faqs = await db.fAQ.findMany({});
     return (
         <main>
-            <h1>FAQ</h1>
+            <Title title="FAQ"/>
             <AddFaq />
             <Table>
                 <TableHeader>

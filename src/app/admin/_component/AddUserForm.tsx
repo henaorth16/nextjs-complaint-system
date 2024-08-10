@@ -31,7 +31,7 @@ const AddUserForm = ({ name, userId }: { name: string | undefined, userId:any })
 
   return (
     <div>
-      <h1>Edit  {name}&apos;s account</h1>
+      <h1 className='text-muted-foreground'>Edit  {name}&apos;s account</h1>
       <form action={action}>
         <div>
           <Label htmlFor='username'>Username:</Label>

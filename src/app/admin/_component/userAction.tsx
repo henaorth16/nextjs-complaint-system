@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button"
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { deleteUsers, deleteCompliant, deletefaq, deleteDep } from "@/lib/actions/actions"
+import { Loader} from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useTransition } from "react"
 
@@ -97,7 +98,7 @@ export function DeleteDep({
         })
       }}
     >
-      Delete
+      {isPending? <Loader/>: "Delete"}
     </Button>
   )
 }

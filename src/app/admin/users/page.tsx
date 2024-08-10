@@ -1,4 +1,4 @@
-// pages/complaints/page.tsx
+// pages/users/page.tsx
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -7,6 +7,7 @@ import { MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { DeleteDropdownItem } from "../_component/userAction";
 import { Button } from "@/components/ui/button";
+import Title from "../_component/Title";
 
 
 export default async function AdminDashboard() {
@@ -18,7 +19,7 @@ export default async function AdminDashboard() {
 
   return (
     <div>
-      <h1>Users</h1>
+      <Title title="Users"/>
       <div className="w-full flex justify-end p-4">
         <a href="/admin/users/create">
           <Button>Create New</Button>
@@ -26,7 +27,6 @@ export default async function AdminDashboard() {
       </div>
       {users.length == 0 ? (
         <h2 className="text-center">No Users Yet!</h2>
-
       ):(
         <Table>
         <TableHeader>
@@ -39,12 +39,12 @@ export default async function AdminDashboard() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.map((complaint, index) => (
+          {users.map((user, index) => (
             <TableRow key={index}>
               <TableCell>{index + 1}</TableCell>
-              <TableCell>{complaint.username}</TableCell>
-              <TableCell>{`${complaint.password.substring(0, 20)}...`}</TableCell>
-              <TableCell>{complaint.department?.name || "N/A"}</TableCell>
+              <TableCell>{user.username}</TableCell>
+              <TableCell>{`${user.password.substring(0, 20)}...`}</TableCell>
+              <TableCell>{user.department?.name || "N/A"}</TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger>
@@ -53,13 +53,13 @@ export default async function AdminDashboard() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuItem asChild>
-                      <Link href={`/admin/users/${complaint.id}/edit`}>
+                      <Link href={`/admin/users/${user.id}/edit`}>
                         Edit
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DeleteDropdownItem
-                      id={complaint.id}
+                      id={user.id}
                     />
                   </DropdownMenuContent>
                 </DropdownMenu>

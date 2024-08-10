@@ -1,28 +1,40 @@
+// @ts-nocheck
 "use server"
 import db from "../db/db";
 import { z } from "zod"
 import fs from "fs/promises"
 import { revalidatePath } from "next/cache";
 
-            
+const excutables = ["EXE", "BAT", "COM", "CMD", "INF", "IPA", "OSX", "PIF", "RUN", "WSH", "PDF", "DOCX"];
+function validateFileFormat(extension: string) {
+let isValid = true
+    for (let i = 0; i < excutables.length; i++) {
+        var small = excutables[i].toLowerCase()
+      isValid = extension == small
+    }
+    console.log(isValid)
+    return isValid
+}
 const fileSchema = z
     .instanceof(File, { message: "Invalid file type" })
     .optional()
     .refine(file => {
-        if (!file) return true; 
+        if (!file) return true;
         if (file !== undefined) {   //if the file found
             const fileSizeInMB = file.size / (1024 * 1024);
-            return fileSizeInMB < 5;
+            return fileSizeInMB < 5 && fileSizeInMB > 0.00195;
         }
-    }, { message: "File size should be between 10KB and 5MB" })
+    }, { message: "File size should be between 2KB and 5MB" })
     .refine(file => {
-        if (!file) return true; 
+        if (!file) return true;
         if (file.name) { // Ensure file.name is defined
             const extension = file.name.split('.').pop()?.toLowerCase();
-            return extension !== 'pdf';
+            if (validateFileFormat(extension)){
+                return false
+            }
         }
         return true;
-    }, { message: "PDF files are not allowed" });
+    }, { message: "PDF or doc files are not allowed" });
 
 const addSchema = z.object({
     customerName: z.string().optional(),
@@ -36,8 +48,7 @@ export async function complainSubmit(formData: FormData) {
     const result = addSchema.safeParse(Object.fromEntries(formData.entries()));
 
     if (result.success === false) {
-        console.error("Validation failed:", result.error.formErrors.fieldErrors);
-        return result.error.formErrors.fieldErrors;
+        return { error: result.error.formErrors.fieldErrors };
     }
 
     const data = result.data;
@@ -46,14 +57,15 @@ export async function complainSubmit(formData: FormData) {
         await fs.mkdir("public/uploads", { recursive: true });
         const filePath = data.fileAttached ? `/uploads/${crypto.randomUUID()}-${data.fileAttached.name}` : "undefined";
         if (data.fileAttached) {
-            await fs.writeFile(`public${filePath}`,Buffer.from(await data.fileAttached.arrayBuffer()))
+            await fs.writeFile(`public${filePath}`, Buffer.from(await data.fileAttached.arrayBuffer()))
         }
 
         const department = await db.department.findFirst({
             where: { name: data.department },
         });
-        if (department == null) {
-            throw new Error("department required")
+
+        if (!department) {
+            return { error: { department: ["Department is required"] } };
         }
 
         await db.complaint.create({
@@ -66,10 +78,9 @@ export async function complainSubmit(formData: FormData) {
             },
         });
 
-        console.log("Data successfully stored in the database");
-
+        return { success: true };
     } catch (error) {
         console.error("Error during database operation:", error);
+        return { error: { message: ["Internal server error"] } };
     }
-    
 }

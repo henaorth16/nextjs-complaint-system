@@ -34,7 +34,7 @@ export async function createUser(FormData: FormData) {
       data: {
         username,
         password: hashedPassword,
-        departmentId: department?.id, // Store departmentId if its selected
+        departmentId: department?.id,
       },
     });
     return user;
@@ -42,7 +42,6 @@ export async function createUser(FormData: FormData) {
     console.error('Error creating user:', error);
   }
   redirect('/admin/users')
-  revalidatePath("/admin/users")
 }
 
 export const getDepartments = async () => {

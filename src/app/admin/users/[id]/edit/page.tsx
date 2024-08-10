@@ -2,6 +2,7 @@ import React from 'react'
 
 import db from "@/lib/db/db"
 import AddUserForm from '@/app/admin/_component/AddUserForm'
+import Title from '@/app/admin/_component/Title';
 
 export type usersType = {
   id: number;
@@ -21,7 +22,7 @@ export default async function EditProductPage({
 
   return (
     <div>
-      <h1>Edit user</h1>
+      <Title title="Edit User"/>
       <AddUserForm name={user?.username} userId={userId} />
     </div> 
   )
